@@ -1,0 +1,9 @@
+namespace: datamammoth
+name: cloud
+version: 0.1.0
+readme: README.md
+authors: ["DataMammoth <dev@datamammoth.com>"]
+description: Ansible collection for managing DataMammoth cloud infrastructure
+license_file: LICENSE
+tags: [cloud, hosting, vps, infrastructure, datamammoth]
+repository: https://github.com/datamammoth/ansible-collection-datamammoth

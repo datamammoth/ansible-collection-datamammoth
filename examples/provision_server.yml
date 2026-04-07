@@ -1,0 +1,42 @@
+---
+- name: Provision DataMammoth server
+  hosts: localhost
+  tasks:
+    - name: Create web server
+      datamammoth.cloud.server:
+        name: web-01
+        product: vps-medium
+        image: ubuntu-22.04
+        zone: us-east
+        state: present
+        api_key: "{{ dm_api_key }}"
+      register: server
+
+    - name: Configure firewall
+      datamammoth.cloud.firewall:
+        server: "{{ server.id }}"
+        rules:
+          - action: accept
+            protocol: tcp
+            port: "80"
+          - action: accept
+            protocol: tcp
+            port: "443"
+          - action: accept
+            protocol: tcp
+            port: "22"
+        api_key: "{{ dm_api_key }}"
+
+    - name: Create baseline snapshot
+      datamammoth.cloud.snapshot:
+        server: "{{ server.id }}"
+        name: "initial-setup-{{ ansible_date_time.date }}"
+        state: present
+        api_key: "{{ dm_api_key }}"
+      register: snapshot
+
+    - name: Show server details
+      ansible.builtin.debug:
+        msg: >
+          Server {{ server.id }} created at {{ server.ip_address }}
+          with snapshot {{ snapshot.id }}
